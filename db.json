@@ -1,20 +1,48 @@
 {
-  "tasks": [
+  "books": [
     {
       "id": "1",
-      "title": "aaa"
+      "title": "A Seleção", 
+      "cover": "https://m.media-amazon.com/images/I/91xaegm8DEL._UF1000,1000_QL80_.jpg",
+      "author": "Kiera Cass",
+      "editor": "Seguinte",
+      "synopsis": "Um romance distópico que acompanha America Singer, uma jovem de casta baixa escolhida para competir com 35 garotas pelo coração do Príncipe Maxon e pela coroa de Illéa.", 
+      "release": 2012,
+      "price": 39.90,
+      "pages": 368,
+      "promotion": false
+    },
+    {
+      "id": "2",
+      "title": "A Elite", 
+      "cover": "https://m.media-amazon.com/images/I/91LS1dWzwZL._UF1000,1000_QL80_.jpg",
+      "author": "Kiera Cass",
+      "editor": "Seguinte",
+      "sinopse": "Segundo livro da série A Seleção, mostra America Singer como uma das seis garotas restantes, com a competição por Maxon mais acirrada. Ela vive um triângulo amoroso entre o príncipe e seu ex-namorado, Aspen, enquanto lida com inseguranças sobre ser princesa, ataques rebeldes e regras rígidas do palácio", 
+      "release": 2012,
+      "price": 34.90,
+      "pages": 360,
+      "promotion": true
     },
     {
       "id": "3",
-      "title": "Agradecer mais uma vez"
+      "title": "Cidades de Papel", 
+      "cover": "https://m.media-amazon.com/images/I/81rrqgx187L._UF1000,1000_QL80_.jpg",
+      "author": "John Green",
+      "sinopse": "Narra a história de Quentin Jacobsen e sua paixão platônica por Margo Roth Spiegelman, sua vizinha enigmática. Após uma noite de aventuras, Margo desaparece, deixando pistas que Quentin e seus amigos seguem, descobrindo que ela é mais complexa do que imaginavam.", 
+      "price": 41.90,
+      "pages": 368,
+      "promotion": false
     },
     {
-      "title": "oiii",
-      "id": "TJqxBbpDOtA"
-    },
-    {
-      "title": "bla",
-      "id": "lwLqnSFyzY8"
+      "id": "4",
+      "title": "A Hipótese do Amor", 
+      "cover": "",
+      "author": "Ali Hazelwood",
+      "sinopse": "Olive Smith, uma doutoranda de biologia em Stanford que, para provar à amiga que superou um ex, beija inesperadamente o rígido e temido professor Adam Carlsen. O beijo impulsiona um namoro de mentira.", 
+      "price": 34.99,
+      "pages": 374,
+      "promotion": true
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
