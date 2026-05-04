@@ -18,8 +18,8 @@
       "cover": "https://m.media-amazon.com/images/I/91LS1dWzwZL._UF1000,1000_QL80_.jpg",
       "author": "Kiera Cass",
       "editor": "Seguinte",
-      "sinopse": "Segundo livro da série A Seleção, mostra America Singer como uma das seis garotas restantes, com a competição por Maxon mais acirrada. Ela vive um triângulo amoroso entre o príncipe e seu ex-namorado, Aspen, enquanto lida com inseguranças sobre ser princesa, ataques rebeldes e regras rígidas do palácio", 
-      "release": 2012,
+      "synopsis": "Segundo livro da série A Seleção, mostra America Singer como uma das seis garotas restantes, com a competição por Maxon mais acirrada. Ela vive um triângulo amoroso entre o príncipe e seu ex-namorado, Aspen, enquanto lida com inseguranças sobre ser princesa, ataques rebeldes e regras rígidas do palácio", 
+      "release": 2013,
       "price": 34.90,
       "pages": 360,
       "promotion": true
@@ -29,7 +29,9 @@
       "title": "Cidades de Papel", 
       "cover": "https://m.media-amazon.com/images/I/81rrqgx187L._UF1000,1000_QL80_.jpg",
       "author": "John Green",
-      "sinopse": "Narra a história de Quentin Jacobsen e sua paixão platônica por Margo Roth Spiegelman, sua vizinha enigmática. Após uma noite de aventuras, Margo desaparece, deixando pistas que Quentin e seus amigos seguem, descobrindo que ela é mais complexa do que imaginavam.", 
+      "editor": "Intrínseca",
+      "synopsis": "Narra a história de Quentin Jacobsen e sua paixão platônica por Margo Roth Spiegelman, sua vizinha enigmática. Após uma noite de aventuras, Margo desaparece, deixando pistas que Quentin e seus amigos seguem, descobrindo que ela é mais complexa do que imaginavam.", 
+      "release": 2013,
       "price": 41.90,
       "pages": 368,
       "promotion": false
@@ -39,7 +41,9 @@
       "title": "A Hipótese do Amor", 
       "cover": "",
       "author": "Ali Hazelwood",
-      "sinopse": "Olive Smith, uma doutoranda de biologia em Stanford que, para provar à amiga que superou um ex, beija inesperadamente o rígido e temido professor Adam Carlsen. O beijo impulsiona um namoro de mentira.", 
+      "editor": "Arqueiro",
+      "synopsis": "Olive Smith, uma doutoranda de biologia em Stanford que, para provar à amiga que superou um ex, beija inesperadamente o rígido e temido professor Adam Carlsen. O beijo impulsiona um namoro de mentira.", 
+      "release": 2022,
       "price": 34.99,
       "pages": 374,
       "promotion": true
