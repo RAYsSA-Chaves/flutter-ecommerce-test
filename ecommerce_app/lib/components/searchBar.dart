@@ -41,6 +41,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
+      
       child: TextField(
         controller: _pesquisa,
         // mostra ícone de X sempre que digita algo

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class BookCard extends StatelessWidget {
 
-  Map<String, dynamic> book;
+  Map<String, dynamic> book;  // chave, valor (pode ser qualquer tipo)
 
   BookCard({
     super.key,
@@ -27,10 +27,14 @@ class BookCard extends StatelessWidget {
       width: 140,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
 
+        children: [
           Container(
             decoration: BoxDecoration(
+               borderRadius: BorderRadius.only(
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.4), 
@@ -39,6 +43,7 @@ class BookCard extends StatelessWidget {
                 ),
               ],
             ),
+
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(12),
@@ -68,7 +73,7 @@ class BookCard extends StatelessWidget {
                             'Promoção',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -84,6 +89,7 @@ class BookCard extends StatelessWidget {
 
           Text(
             title,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -92,7 +98,7 @@ class BookCard extends StatelessWidget {
 
           Text(
             precoFormatado,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               color: Colors.black,
             ),
