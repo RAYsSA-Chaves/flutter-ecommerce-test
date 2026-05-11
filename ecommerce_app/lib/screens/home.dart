@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
   }
 
   void getBooks() async {
-      final result = await http.get(Uri.parse("http://192.168.1.5:3000/books")); 
+      final result = await http.get(Uri.parse("http://192.168.56.1:3000/books")); 
       
       if (result.statusCode == 200) {
         final books = jsonDecode(result.body);
@@ -62,10 +62,10 @@ class _HomeState extends State<Home> {
             // appbar improvisada sem ficar fixa na tela
             Container(
               padding: EdgeInsets.only(
-                top: 20,
+                top: 10,
                 left: 16,
                 right: 16,
-                bottom: 16,
+                bottom: 20,
               ),
               decoration: BoxDecoration(
                 color: Colors.black,
@@ -101,16 +101,17 @@ class _HomeState extends State<Home> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 6,
+                          offset: Offset(0, 0),
                         ),
                       ],
                     ),
                     child: IconButton(
+                      hoverColor: Colors.transparent,
                       icon: Icon(
                         Icons.add,
                         color: Colors.black,
@@ -125,8 +126,8 @@ class _HomeState extends State<Home> {
                     width: double.infinity,
                     child: Wrap(
                       spacing: 16,
-                      runSpacing: 24,
-                      alignment: WrapAlignment.spaceEvenly,
+                      runSpacing: 40,
+                      alignment: WrapAlignment.spaceBetween,
                       children:
                         _filteredBooks.map((bookData) {
                           return BookCard(
@@ -135,6 +136,8 @@ class _HomeState extends State<Home> {
                         }).toList(),
                     ),
                   ),
+
+                  SizedBox(height: 20,)
                 ],
               ),
             ),
