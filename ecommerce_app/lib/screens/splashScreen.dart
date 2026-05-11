@@ -5,7 +5,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       Duration(seconds: 2), 
       () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
       }
     );
   }
@@ -75,11 +75,11 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
 
           Positioned(
-            bottom: size.height * 0.19,
+            bottom: size.height * 0.2,
             left: size.width * 0.4,
             child: LinearPercentIndicator(
               width: size.width * 0.2,
-              lineHeight: 8,
+              lineHeight: 4,
               percent: 1.0,
               animation: true,
               animationDuration: 2000,
