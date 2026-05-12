@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
   }
 
   void getBooks() async {
-      final result = await http.get(Uri.parse("http://192.168.56.1:3000/books")); 
+      final result = await http.get(Uri.parse("http://192.168.1.6:3000/books")); 
       
       if (result.statusCode == 200) {
         final books = jsonDecode(result.body);

@@ -22,7 +22,7 @@ class GrayBtn extends StatelessWidget {
       ),
       onPressed: onPressed,
       style: IconButton.styleFrom(
-        backgroundColor: Colors.grey,
+        backgroundColor: Color.fromARGB(255, 209, 209, 209),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
