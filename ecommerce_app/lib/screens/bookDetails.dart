@@ -3,6 +3,7 @@ import 'package:ecommerce_app/components/cartBtn.dart';
 import 'package:ecommerce_app/components/grayBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class BookDetails extends StatefulWidget {
@@ -20,6 +21,8 @@ class BookDetails extends StatefulWidget {
 
 class _BookDetailsState extends State<BookDetails> {
   Map<String, dynamic>? _book;
+  
+  final String baseUrl = dotenv.env['API_URL'] ?? '';
 
   @override
   void initState() {
@@ -28,7 +31,7 @@ class _BookDetailsState extends State<BookDetails> {
   }
 
   void getBookById() async {
-      final result = await http.get(Uri.parse("http://192.168.1.6:3000/books/${widget.id}"));
+      final result = await http.get(Uri.parse("$baseUrl/books/${widget.id}"));
       
       if (result.statusCode == 200) {
         setState(() {

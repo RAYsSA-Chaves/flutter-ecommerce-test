@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:ecommerce_app/components/bookCard.dart';
 import 'package:ecommerce_app/components/cartBtn.dart';
 import 'package:ecommerce_app/components/searchBar.dart';
+import 'package:ecommerce_app/screens/addBook.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class Home extends StatefulWidget {
@@ -18,6 +20,8 @@ class _HomeState extends State<Home> {
   List<dynamic> _allBooks = [];
   List<dynamic> _filteredBooks = [];
 
+  final String baseUrl = dotenv.env['API_URL'] ?? '';
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +29,7 @@ class _HomeState extends State<Home> {
   }
 
   void getBooks() async {
-      final result = await http.get(Uri.parse("http://192.168.1.6:3000/books")); 
+      final result = await http.get(Uri.parse("$baseUrl/books")); 
       
       if (result.statusCode == 200) {
         final books = jsonDecode(result.body);
@@ -116,7 +120,14 @@ class _HomeState extends State<Home> {
                         Icons.add,
                         color: Colors.black,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddBook(),
+                          ),
+                        );
+                      },
                     ),
                   ),
 
