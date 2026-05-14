@@ -54,7 +54,7 @@ class _BookDetailsState extends State<BookDetails> {
     
     final pages = _book!['pages']?.toString() ?? 'N/A';
 
-    final year = _book!['year']?.toString() ?? 'N/A';
+    final year = _book!['release']?.toString() ?? 'N/A';
 
     final String synopsis = _book!['synopsis'] ?? 'Sinopse não disponível.';
 
@@ -66,7 +66,12 @@ class _BookDetailsState extends State<BookDetails> {
 
             // parte cinza
             Padding(
-              padding: EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 32),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + 20,
+                left: 16, 
+                right: 16, 
+                bottom: 60
+              ),
               child: Column(
                 children: [
                   Row(
@@ -107,12 +112,12 @@ class _BookDetailsState extends State<BookDetails> {
                 ),
               ),
               padding: EdgeInsets.all(24),
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(
@@ -129,7 +134,7 @@ class _BookDetailsState extends State<BookDetails> {
                             iconPath: 'images/edit.png',
                             onPressed: () {},
                           ),
-                          SizedBox(width: 8),
+                          SizedBox(width: 10),
                           GrayBtn(
                             iconPath: 'images/trash.png',
                             onPressed: () {},
@@ -148,21 +153,25 @@ class _BookDetailsState extends State<BookDetails> {
 
                   SizedBox(height: 24),
 
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 209, 209, 209),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(author, style: TextStyle(fontSize: 14)),
+                  Row(
+                    children: [
+                      Text("Autor(a): ", style: TextStyle(fontSize: 16)),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 209, 209, 209),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(author, style: TextStyle(fontSize: 14)),
+                      ),
+                    ],
                   ),
 
                   SizedBox(height: 16),
 
                   Row(
                     children: [
-                      Text("Páginas", style: TextStyle(fontSize: 16)),
-                      SizedBox(width: 8),
+                      Text("Páginas: ", style: TextStyle(fontSize: 16)),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
@@ -177,31 +186,31 @@ class _BookDetailsState extends State<BookDetails> {
                   SizedBox(height: 16),
                   
                   Text("Lançamento: $year", style: TextStyle(fontSize: 16)),
+
                   SizedBox(height: 32),
 
                   Text(
                     "Sinopse",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-
                   SizedBox(height: 8),
-
                   Text(
+                    textAlign: TextAlign.justify,
                     synopsis,
                     style: TextStyle(fontSize: 16, height: 1.5),
                   ),
 
-                  SizedBox(height: 40),
+                  SizedBox(height: 50),
 
                   // botão adicionar ao carrinho
                   SizedBox(
                     width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
+                    height: 54,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
                         backgroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
+                          borderRadius: BorderRadius.circular(50),
                         ),
                       ),
                       onPressed: () {},
@@ -209,7 +218,7 @@ class _BookDetailsState extends State<BookDetails> {
                         "Adicionar ao carrinho",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

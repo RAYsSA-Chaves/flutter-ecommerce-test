@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
             // appbar improvisada sem ficar fixa na tela
             Container(
               padding: EdgeInsets.only(
-                top: 10,
+                top: MediaQuery.of(context).padding.top + 20,
                 left: 16,
                 right: 16,
                 bottom: 20,

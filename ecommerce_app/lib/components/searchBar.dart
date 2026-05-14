@@ -55,7 +55,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           isCollapsed: true,
-          hintText: 'Busque um livro',
+          hintText: 'Busque um título',
           hintStyle: TextStyle(
             color: Colors.black,
             fontSize: 16,
