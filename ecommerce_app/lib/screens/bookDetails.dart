@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:ecommerce_app/components/cartBtn.dart';
+import 'package:ecommerce_app/components/customSnackBar.dart';
 import 'package:ecommerce_app/components/grayBtn.dart';
+import 'package:ecommerce_app/screens/editBook.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class BookDetails extends StatefulWidget {
@@ -37,6 +40,72 @@ class _BookDetailsState extends State<BookDetails> {
         setState(() {
           _book = jsonDecode(result.body);
         });
+    }
+  }
+
+  void deleteBook() async {
+    final response = await http.delete(Uri.parse("$baseUrl/books/${widget.id}"));
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      if (mounted) {
+        Navigator.pop(context); // fecha o modal se ainda estiver aberto
+        Navigator.pop(context); // volta para a home
+      }
+    } else {
+      showCustomSnackBar(context, "Erro ao deletar o livro.");
+    }
+  }
+
+  void showDeleteModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirmar exclusão", style: TextStyle(fontWeight: FontWeight.bold),),
+          content: Text("Tem certeza que deseja excluir este livro?"),
+          actions: [
+            // botão cancelar
+            TextButton(
+              onPressed: () => Navigator.pop(context), // só fecha o modal
+              child: Text("Cancelar", style: TextStyle(color: Colors.black)),
+              style: TextButton.styleFrom(
+                overlayColor: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+              ),
+            ),
+
+            // botão confirmar
+            TextButton(
+              onPressed: () {
+                deleteBook(); // chama a função de delete
+              },
+              child: Text("Deletar", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+              style: TextButton.styleFrom(
+                overlayColor: Color.fromARGB(255, 255, 0, 0).withOpacity(0.3),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void addToCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    // pega a lista atual ou cria uma vazia se não existir
+    List<String> cartItems = prefs.getStringList('cart_items') ?? [];
+
+    // evita duplicatas
+    if (cartItems.contains(widget.id)) {
+      showCustomSnackBar(context, "Este livro já está no seu carrinho!");
+    } else {
+      // adiciona o novo ID
+      cartItems.add(widget.id);
+      await prefs.setStringList('cart_items', cartItems);
+
+      if (mounted) {
+        showCustomSnackBar(context, "Livro adicionado ao seu carrinho!", color: Colors.green);
+      }
     }
   }
 
@@ -89,7 +158,12 @@ class _BookDetailsState extends State<BookDetails> {
                   
                   // capa do livro
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                      topLeft: Radius.circular(2),
+                      bottomLeft: Radius.circular(2)
+                    ),
                     child: Image.network(
                       cover,
                       width: 180,
@@ -132,12 +206,23 @@ class _BookDetailsState extends State<BookDetails> {
                         children: [
                           GrayBtn(
                             iconPath: 'images/edit.png',
-                            onPressed: () {},
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditBook(id: widget.id),
+                                ),
+                              );
+                              // atualiza a página ao voltar da tela de edição
+                              getBookById();
+                            },
                           ),
                           SizedBox(width: 10),
                           GrayBtn(
                             iconPath: 'images/trash.png',
-                            onPressed: () {},
+                            onPressed: () {
+                              showDeleteModal();
+                            },
                           ),
                         ],
                       )
@@ -213,7 +298,9 @@ class _BookDetailsState extends State<BookDetails> {
                           borderRadius: BorderRadius.circular(50),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        addToCart();
+                      },
                       child: Text(
                         "Adicionar ao carrinho",
                         style: TextStyle(

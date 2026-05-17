@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ecommerce_app/components/customSnackBar.dart';
 import 'package:ecommerce_app/components/customTextField.dart';
 import 'package:ecommerce_app/components/searchBar.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +36,6 @@ class _AddBookState extends State<AddBook> {
   final String apiKey = dotenv.env['GOOGLE_BOOKS_API_KEY'] ?? '';
   final String baseUrl = dotenv.env['API_URL'] ?? '';
 
-  // helper para exibir SnackBars
-  void _showSnackBar(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }
-
   // buscar livros na Google Books API
   void searchGoogleBooks(String search) async {
     if (search.trim().isEmpty) {
@@ -66,7 +62,7 @@ class _AddBookState extends State<AddBook> {
         final data = jsonDecode(response.body);
 
         if (data['items'] == null || data['items'].isEmpty) {
-          _showSnackBar('Nenhum livro encontrado. Preencha manualmente.');
+          showCustomSnackBar(context, 'Nenhum livro encontrado. Preencha manualmente.');
           return;
         }
 
@@ -79,6 +75,7 @@ class _AddBookState extends State<AddBook> {
 
           if (volume['imageLinks'] != null && volume['imageLinks']['thumbnail'] != null) {
             coverUrl = volume['imageLinks']['thumbnail'];
+            coverUrl = coverUrl.replaceAll('zoom=1', 'zoom=2');
             coverUrl = coverUrl.replaceAll('http://', 'https://');
             coverUrl = coverUrl.replaceAll('&edge=curl', '');
             coverUrl = 'https://wsrv.nl/?url=${Uri.encodeComponent(coverUrl)}';
@@ -108,11 +105,11 @@ class _AddBookState extends State<AddBook> {
         });
 
       } else {
-        _showSnackBar('Erro ao buscar livro.');
+        showCustomSnackBar(context, 'Erro ao buscar livro.');
       }
 
     } catch (e) {
-      _showSnackBar('Erro ao buscar livro.');
+      showCustomSnackBar(context, 'Erro ao buscar livro.');
     }
   }
 
@@ -131,7 +128,7 @@ class _AddBookState extends State<AddBook> {
   // não deixa cadastrar sem preencher todos os campos
   void _cadastrarLivro() async {
     if (_titleController.text.isEmpty || _priceController.text.isEmpty || _authorController.text.isEmpty || _coverController.text.isEmpty || _editorController.text.isEmpty || _pagesController.text.isEmpty || _releaseController.text.isEmpty || _synopsisController.text.isEmpty) {
-      _showSnackBar('É obrigatório preencher todas as informações do livro!');
+      showCustomSnackBar(context, 'É obrigatório preencher todas as informações do livro!');
       return;
     }
 
@@ -145,7 +142,7 @@ class _AddBookState extends State<AddBook> {
       "author": _authorController.text,
       "editor": _editorController.text,
       "pages": int.tryParse(_pagesController.text) ?? 0,
-      "year": int.tryParse(_releaseController.text) ?? 0,
+      "release": int.tryParse(_releaseController.text) ?? 0,
       "synopsis": _synopsisController.text,
       "cover": _coverController.text,
       "price": price,
@@ -160,15 +157,15 @@ class _AddBookState extends State<AddBook> {
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        _showSnackBar('Livro cadastrado com sucesso!');
+        showCustomSnackBar(context, 'Livro cadastrado com sucesso!', color: Colors.green);
         if (mounted) Navigator.pop(context);
 
       } else {
-        _showSnackBar('Erro ao cadastrar livro.');
+        showCustomSnackBar(context, 'Erro ao cadastrar livro.');
       }
 
     } catch (e) {
-      _showSnackBar('Erro ao cadastrar livro.');
+      showCustomSnackBar(context, 'Erro ao cadastrar livro.');
 
     } finally {
       setState(() { _isSaving = false; });
@@ -220,15 +217,18 @@ class _AddBookState extends State<AddBook> {
               ),
             ),
             
-            // parte branca
             SizedBox(height: 20,),
 
+            // parte branca
             Padding(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Buscar dados na internet:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text(
+                    "Buscar dados na internet:", 
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)
+                  ),
 
                   SizedBox(height: 20),
                   
@@ -249,62 +249,95 @@ class _AddBookState extends State<AddBook> {
 
                   // carrossel de resultados da busca
                   if (_searchResults.isNotEmpty)
-                    Container(
-                      height: 230,
-                      margin: EdgeInsets.symmetric(vertical: 30),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _searchResults.length,
-                        itemBuilder: (context, index) {
-                          final book = _searchResults[index];
-                          return GestureDetector(
-                            onTap: () => _fillFormWithBook(book),
-                            child: Container(
-                              width: 130,
-                              margin: EdgeInsets.only(right: 16),
-                              child: Column(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(12),
-                                      bottomRight: Radius.circular(12),
-                                    ),
-                                    child: Image.network(
-                                      book['cover'],
+                  Column( 
+                    children: [
+                      Container(
+                        height: 230,
+                        margin: EdgeInsets.only(top: 20, bottom: 20),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            final book = _searchResults[index];
+                            return GestureDetector(
+                              onTap: () => _fillFormWithBook(book),
+                              child: Container(
+                                width: 130,
+                                margin: EdgeInsets.only(right: 16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
                                       height: 180,
-                                      width: 140,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) => Container(
-                                        height: 180,
-                                        width: 140,
-                                        color: Colors.grey[300],
-                                        child: Icon(Icons.broken_image, color: Colors.grey),
+                                      width: 130,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(12),
+                                          bottomRight: Radius.circular(12),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.4),
+                                            blurRadius: 8,
+                                            offset: Offset(4, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(12),
+                                          bottomRight: Radius.circular(12),
+                                        ),
+                                        child: Image.network(
+                                          book['cover'],
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) => Container(
+                                            color: Colors.grey[300],
+                                            child: Icon(Icons.image_not_supported),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    book['title'],
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                                  ),
-                                ],
+                                    SizedBox(height: 8),
+                                    // titiulo máximo 2 linas
+                                    SizedBox(
+                                      height: 35,
+                                      child: Text(
+                                        book['title'],
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  
-                  Divider(height: 60, thickness: 1),
-                  
+                    ],
+                  ),
+
+                  SizedBox(height: 20),
+
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey[300],
+                  ),
+
+                  SizedBox(height: 20),
+
                   Text("Detalhes do Livro:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+
                   SizedBox(height: 16),
                   
                   Center(
                     child: Column(
                       children: [
-                        // NOVO DESIGN DA CAPA SOLICITADO
+
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -324,55 +357,31 @@ class _AddBookState extends State<AddBook> {
                               topRight: Radius.circular(12),
                               bottomRight: Radius.circular(12),
                             ),
-                            child: Stack(
-                              children: [
-                                _coverController.text.isNotEmpty
-                                    ? Image.network(
-                                        _coverController.text,
-                                        width: 140,
-                                        height: 200,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => Container(
-                                          width: 140,
-                                          height: 200,
-                                          color: Colors.grey[300],
-                                          child: Icon(Icons.broken_image, color: Colors.grey),
-                                        ),
-                                      )
-                                    : Container(
-                                        height: 200,
-                                        width: 140,
-                                        color: Colors.grey[300],
-                                        child: Icon(Icons.image_not_supported, color: Colors.grey),
-                                      ),
-                                if (_isPromotion)
-                                  Positioned(
-                                    top: 12,
-                                    left: -28,
-                                    child: Transform.rotate(
-                                      angle: -0.785,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 30,
-                                          vertical: 4,
-                                        ),
-                                        color: Colors.black,
-                                        child: Text(
-                                          'Promoção',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                            child:
+                              _coverController.text.isNotEmpty
+                              ? Image.network(
+                                  _coverController.text,
+                                  width: 140,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    width: 140,
+                                    height: 200,
+                                    color: Colors.grey[300],
+                                    child: Icon(Icons.image_not_supported, color: Colors.grey),
                                   ),
-                              ],
-                            ),
+                                )
+                              : Container(
+                                  height: 200,
+                                  width: 140,
+                                  color: Colors.grey[300],
+                                  child: Icon(Icons.image_not_supported, color: Colors.grey),
+                                ),
                           ),
                         ),
+
                         SizedBox(height: 16),
+
                         TextField(
                           cursorColor: Colors.black,
                           controller: _coverController,
@@ -394,20 +403,27 @@ class _AddBookState extends State<AddBook> {
                       ],
                     ),
                   ),
+
                   SizedBox(height: 16),
                   
-                  // UTILIZANDO O NOVO COMPONENTE DE INPUT
                   CustomTextField(label: 'Título', controller: _titleController),
+
                   CustomTextField(label: 'Autor', controller: _authorController),
+
                   CustomTextField(label: 'Editora', controller: _editorController),
+
                   Row(
                     children: [
                       Expanded(child: CustomTextField(label: 'Páginas', controller: _pagesController, type: TextInputType.number)),
+
                       SizedBox(width: 16),
+
                       Expanded(child: CustomTextField(label: 'Ano', controller: _releaseController, type: TextInputType.number)),
                     ],
                   ),
+
                   CustomTextField(label: 'Sinopse', controller: _synopsisController, maxLines: 4),
+
                   Row(
                     children: [
                       Expanded(
@@ -417,7 +433,9 @@ class _AddBookState extends State<AddBook> {
                           type: TextInputType.numberWithOptions(decimal: true),
                         ),
                       ),
+
                       SizedBox(width: 16),
+
                       Column(
                         children: [
                           Text("Promoção?"),
@@ -430,37 +448,50 @@ class _AddBookState extends State<AddBook> {
                       ),
                     ],
                   ),
+
                   SizedBox(height: 32),
                   
                   Row(
                     children: [
                       Expanded(
-                        child: TextButton(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            elevation: 6,
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
                           onPressed: () => Navigator.pop(context),
-                          child: Text('Cancelar', style: TextStyle(color: Colors.black, fontSize: 16)),
+                          child: Text('Cancelar', style: TextStyle(fontSize: 16)),
                         ),
                       ),
+
                       SizedBox(width: 16),
+                      
                       Expanded(
-                        flex: 2,
-                        child: InkWell(
-                          onTap: _isSaving ? null : _cadastrarLivro,
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            decoration: BoxDecoration(
-                              color: _isSaving ? Colors.grey : Colors.black,
-                              borderRadius: BorderRadius.circular(12),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            disabledBackgroundColor: Colors.black, 
+                            disabledForegroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
                             ),
-                            child: _isSaving
-                                ? SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                                : Text('Cadastrar', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
+                          onPressed: _isSaving ? null : _cadastrarLivro,
+                          child: _isSaving
+                            ? SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                            : Text('Cadastrar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 20),
                 ],
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:ecommerce_app/components/bookCard.dart';
 import 'package:ecommerce_app/components/cartBtn.dart';
 import 'package:ecommerce_app/components/searchBar.dart';
 import 'package:ecommerce_app/screens/addBook.dart';
+import 'package:ecommerce_app/screens/bookDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -120,13 +121,15 @@ class _HomeState extends State<Home> {
                         Icons.add,
                         color: Colors.black,
                       ),
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async { 
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddBook(),
                           ),
                         );
+                        // recarrega a lista quando voltar da tela de cadastro
+                        getBooks(); 
                       },
                     ),
                   ),
@@ -143,6 +146,16 @@ class _HomeState extends State<Home> {
                         _filteredBooks.map((bookData) {
                           return BookCard(
                             book: bookData,
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookDetails(id: bookData['id']),
+                                ),
+                              );
+                              // quando voltar da tela de detalhes atualiza a lista
+                              getBooks(); 
+                            },
                           );
                         }).toList(),
                     ),

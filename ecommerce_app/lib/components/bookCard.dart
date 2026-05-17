@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 class BookCard extends StatelessWidget {
 
   Map<String, dynamic> book;  // chave, valor (pode ser qualquer tipo)
+  final VoidCallback onTap; // o card recebe a ação de clique da tela home
 
   BookCard({
     super.key,
     required this.book,
+    required this.onTap
   });
 
   @override
@@ -29,12 +31,7 @@ class BookCard extends StatelessWidget {
     return SizedBox(
       width: 140,
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => BookDetails(id: id)),
-          );
-        },
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
 
