@@ -43,6 +43,26 @@ class _BookDetailsState extends State<BookDetails> {
     }
   }
 
+  // em FastAPI (python):
+  //
+  // from fastapi import FastAPI
+  //
+  // app = FastAPI()
+  //
+  // books = [
+  //     {
+  //       "id": 1,
+  //       "title": "A Seleção"
+  //     }
+  // ]
+  //
+  // @app.get("/books/{id}")
+  // def get_book_by_id(id: int):
+  //     for book in books:
+  //         if book["id"] == id:
+  //             return book
+  //     return {"message": "Livro não encontrado"}
+
   void deleteBook() async {
     final response = await http.delete(Uri.parse("$baseUrl/books/${widget.id}"));
 
